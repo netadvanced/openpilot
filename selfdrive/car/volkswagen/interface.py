@@ -23,7 +23,7 @@ class CarInterface(CarInterfaceBase):
   def get_params(candidate, fingerprint=gen_empty_fingerprint(), has_relay=False, car_fw=[]):
     ret = CarInterfaceBase.get_std_params(candidate, fingerprint, has_relay)
 
-    if candidate == CAR.GOLF:
+    if candidate in [CAR.GOLF, CAR.SKODA_SUPERB_B8]:
       # Set common MQB parameters that will apply globally
       ret.carName = "volkswagen"
       ret.radarOffCan = True
@@ -34,6 +34,7 @@ class CarInterface(CarInterfaceBase):
       ret.steerActuatorDelay = 0.05 # Hopefully all MQB racks are similar here
       ret.steerLimitTimer = 0.4
 
+    if candidate == CAR.GOLF:
       # As a starting point for speed-adjusted lateral tuning, use the example
       # map speed breakpoints from a VW Tiguan (SSP 399 page 9). It's unclear
       # whether the driver assist map breakpoints have any direct bearing on
@@ -58,31 +59,14 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kiV = [0.05, 0.05, 0.05]
       tire_stiffness_factor = 0.6
 
-    if candidate == CAR.SUPERB:
-      # Set common MQB parameters that will apply globally
-      ret.carName = "volkswagen"
-      ret.radarOffCan = True
-      ret.safetyModel = car.CarParams.SafetyModel.volkswagen
-
-      # Additional common MQB parameters that may be overridden per-vehicle
+    elif candidate == CAR.SKODA_SUPERB_B8:
+      # Left these to tweak 
       ret.steerRateCost = 0.5
       ret.steerActuatorDelay = 0.05 # Hopefully all MQB racks are similar here
       ret.steerLimitTimer = 0.4
 
-      # As a starting point for speed-adjusted lateral tuning, use the example
-      # map speed breakpoints from a VW Tiguan (SSP 399 page 9). It's unclear
-      # whether the driver assist map breakpoints have any direct bearing on
-      # HCA assist torque, but if they're good breakpoints for the driver,
-      # they're probably good breakpoints for HCA as well. OP won't be driving
-      # 250kph/155mph but it provides interpolation scaling above 100kmh/62mph.
       ret.lateralTuning.pid.kpBP = [0., 15 * CV.KPH_TO_MS, 50 * CV.KPH_TO_MS]
       ret.lateralTuning.pid.kiBP = [0., 15 * CV.KPH_TO_MS, 50 * CV.KPH_TO_MS]
-
-      # FIXME: Per-vehicle parameters need to be reintegrated.
-      # For the time being, per-vehicle stuff is being archived since we
-      # can't auto-detect very well yet. Now that tuning is figured out,
-      # averaged params should work reasonably on a range of cars. Owners
-      # can tweak here, as needed, until we have car type auto-detection.
 
       ret.mass = 1800 + STD_CARGO_KG
       ret.wheelbase = 2.85
