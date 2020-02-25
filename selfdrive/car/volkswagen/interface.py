@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from cereal import car
 from selfdrive.config import Conversions as CV
 from selfdrive.controls.lib.drive_helpers import create_event, EventTypes as ET
@@ -76,6 +77,9 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kpV = [0.15, 0.25, 0.60]
       ret.lateralTuning.pid.kiV = [0.05, 0.05, 0.05]
       tire_stiffness_factor = 0.6
+      
+    else:
+      raise ValueError("unsupported car %s" % candidate)
 
     ret.enableCamera = True # Stock camera detection doesn't apply to VW
     ret.transmissionType = car.CarParams.TransmissionType.automatic
