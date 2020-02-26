@@ -24,7 +24,7 @@ class CarInterface(CarInterfaceBase):
   def get_params(candidate, fingerprint=gen_empty_fingerprint(), has_relay=False, car_fw=[]):
     ret = CarInterfaceBase.get_std_params(candidate, fingerprint, has_relay)
 
-    if candidate in [CAR.GOLF, CAR.SKODA_SUPERB_B8]:
+    if candidate in [CAR.VW_GOLF, CAR.SKODA_SUPERB_B8]:
       # Set common MQB parameters that will apply globally
       ret.carName = "volkswagen"
       ret.radarOffCan = True
@@ -35,7 +35,7 @@ class CarInterface(CarInterfaceBase):
       ret.steerActuatorDelay = 0.05 # Hopefully all MQB racks are similar here
       ret.steerLimitTimer = 0.4
 
-    if candidate == CAR.GOLF:
+    if candidate == CAR.VW_GOLF:
       # As a starting point for speed-adjusted lateral tuning, use the example
       # map speed breakpoints from a VW Tiguan (SSP 399 page 9). It's unclear
       # whether the driver assist map breakpoints have any direct bearing on
