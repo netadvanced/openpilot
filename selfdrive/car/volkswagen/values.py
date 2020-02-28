@@ -49,6 +49,8 @@ class CAR:
   VW_GOLF = "Volkswagen Golf"
   SKODA_SUPERB_B8 = "Skoda Superb B8-3V"
 
+# Volkswagen owns a few brands, Volkswagen, Audi, Skoda, Seat.
+# All share the same platforms with subtle changes, I've renamed the fingerprints to reflect the brand_model_version
 FINGERPRINTS = {
   CAR.VW_GOLF: [
   # 76b83eb0245de90e|2019-10-21--17-40-42 - jyoung8607 car

@@ -61,22 +61,25 @@ class CarInterface(CarInterfaceBase):
       tire_stiffness_factor = 0.6
 
     elif candidate == CAR.SKODA_SUPERB_B8:
-      # Left these to tweak 
-      ret.steerRateCost = 0.5
-      ret.steerActuatorDelay = 0.05 # Hopefully all MQB racks are similar here
+      # Left these to tweak and override stock settings
+      # Values have been imported from jyoung repo
+      ret.steerRateCost = 1.0
+      ret.steerActuatorDelay = 0.1
       ret.steerLimitTimer = 0.4
+      ret.steerMaxBP = [0.]  # m/s
+      ret.steerMaxV = [1.]
 
-      ret.lateralTuning.pid.kpBP = [0., 15 * CV.KPH_TO_MS, 50 * CV.KPH_TO_MS]
-      ret.lateralTuning.pid.kiBP = [0., 15 * CV.KPH_TO_MS, 50 * CV.KPH_TO_MS]
+      ret.lateralTuning.pid.kpBP = [0.]
+      ret.lateralTuning.pid.kiBP = [0.]
 
-      ret.mass = 1800 + STD_CARGO_KG
-      ret.wheelbase = 2.85
+      ret.mass = 1700 + STD_CARGO_KG
+      ret.wheelbase = 2.64
       ret.centerToFront = ret.wheelbase * 0.45
       ret.steerRatio = 15.6
       ret.lateralTuning.pid.kf = 0.00006
-      ret.lateralTuning.pid.kpV = [0.15, 0.25, 0.60]
-      ret.lateralTuning.pid.kiV = [0.05, 0.05, 0.05]
-      tire_stiffness_factor = 0.6
+      ret.lateralTuning.pid.kpV = [0.6]
+      ret.lateralTuning.pid.kiV = [0.2]
+      tire_stiffness_factor = 1.0
       
     else:
       raise ValueError("unsupported car %s" % candidate)
