@@ -418,7 +418,11 @@ routes = {
     'enableDsu': False,
   },
   "76b83eb0245de90e|2019-10-20--15-42-29": {
-    'carFingerprint': VOLKSWAGEN.GOLF,
+    'carFingerprint': VOLKSWAGEN.VW_GOLF,
+    'enableCamera': True,
+  },
+  "972bfa9500dd3189|2020-02-24--12-34-56": {
+    'carFingerprint': VOLKSWAGEN.SKODA_SUPERB_B8,
     'enableCamera': True,
   },
   "791340bc01ed993d|2019-03-10--16-28-08": {
