@@ -39,12 +39,7 @@ class CarInterface(CarInterfaceBase):
       ret.steerActuatorDelay = 0.1
       ret.steerLimitTimer = 0.4
 
-      # As a starting point for speed-adjusted lateral tuning, use the example
-      # map speed breakpoints from a VW Tiguan (SSP 399 page 9). It's unclear
-      # whether the driver assist map breakpoints have any direct bearing on
-      # HCA assist torque, but if they're good breakpoints for the driver,
-      # they're probably good breakpoints for HCA as well. OP won't be driving
-      # 250kph/155mph but it provides interpolation scaling above 100kmh/62mph.
+      # Radical change from jyoung's repo
       ret.lateralTuning.pid.kpBP = [0.]
       ret.lateralTuning.pid.kiBP = [0.]
 
