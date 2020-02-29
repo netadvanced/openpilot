@@ -25,9 +25,10 @@ class CarInterface(CarInterfaceBase):
     ret = CarInterfaceBase.get_std_params(candidate, fingerprint, has_relay)
 
     # Updated all the values from jyoung's repo, indeed they are much better now
-    # but might need a bit of tuning
-    
+    # but might still need a bit of tuning
+
     if candidate in [CAR.VW_GOLF, CAR.SKODA_SUPERB_B8]:
+      
       # Set common MQB parameters that will apply globally
       ret.carName = "volkswagen"
       ret.radarOffCan = True
@@ -38,7 +39,6 @@ class CarInterface(CarInterfaceBase):
       ret.steerActuatorDelay = 0.1
       ret.steerLimitTimer = 0.4
 
-    if candidate == CAR.VW_GOLF:
       # As a starting point for speed-adjusted lateral tuning, use the example
       # map speed breakpoints from a VW Tiguan (SSP 399 page 9). It's unclear
       # whether the driver assist map breakpoints have any direct bearing on
@@ -47,6 +47,8 @@ class CarInterface(CarInterfaceBase):
       # 250kph/155mph but it provides interpolation scaling above 100kmh/62mph.
       ret.lateralTuning.pid.kpBP = [0.]
       ret.lateralTuning.pid.kiBP = [0.]
+
+    if candidate == CAR.VW_GOLF:
 
       ret.mass = 1500 + STD_CARGO_KG
       ret.wheelbase = 2.64
@@ -58,16 +60,6 @@ class CarInterface(CarInterfaceBase):
       tire_stiffness_factor = 1.0
 
     elif candidate == CAR.SKODA_SUPERB_B8:
-      # Values have updated from jyoung's repo and adjusted for the Superb
-      # Test in progress
-      ret.steerRateCost = 1.0
-      ret.steerActuatorDelay = 0.1
-      ret.steerLimitTimer = 0.4
-      ret.steerMaxBP = [0.]  # m/s
-      ret.steerMaxV = [1.]
-
-      ret.lateralTuning.pid.kpBP = [0.]
-      ret.lateralTuning.pid.kiBP = [0.]
 
       ret.mass = 1700 + STD_CARGO_KG
       ret.wheelbase = 2.85
