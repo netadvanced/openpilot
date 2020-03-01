@@ -23,8 +23,6 @@ class CANBUS:
   cam = 2
 
 BUTTON_STATES = {
-  "leftBlinker": False,
-  "rightBlinker": False,
   "accelCruise": False,
   "decelCruise": False,
   "cancel": False,
@@ -47,7 +45,7 @@ MQB_LDW_MESSAGES = {
 
 class CAR:
   VW_GOLF = "Volkswagen Golf"
-  SKODA_SUPERB_B8 = "Skoda Superb B8-3V"
+  SKODA_SUPERB_B8 = "Skoda Superb B8 3V"
 
 # Volkswagen owns a few brands, Volkswagen, Audi, Skoda, Seat.
 # All share the same platforms with subtle changes, I've renamed the fingerprints to reflect the brand_model_version
