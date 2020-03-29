@@ -23,9 +23,6 @@ class CarInterface(CarInterfaceBase):
   def get_params(candidate, fingerprint=gen_empty_fingerprint(), has_relay=False, car_fw=[]):
     ret = CarInterfaceBase.get_std_params(candidate, fingerprint, has_relay)
 
-    # Applies to all models for now
-    # if candidate in (CAR.VW_GOLF, CAR.SKODA_SUPERB_B8, CAR.VW_TOURAN):
-
     # Set common MQB parameters that will apply globally
     ret.carName = "volkswagen"
     ret.radarOffCan = True
@@ -56,40 +53,26 @@ class CarInterface(CarInterfaceBase):
 
     ret.enableCamera = True # Stock camera detection doesn't apply to VW
     ret.transmissionType = car.CarParams.TransmissionType.automatic
-    # ret.enableCruise = True  # Stock ACC still controls acceleration and braking
-    # ret.openpilotLongitudinalControl = False
-    # ret.steerControlType = car.CarParams.SteerControlType.torque
+    ret.enableCruise = True  # Stock ACC still controls acceleration and braking
+    ret.openpilotLongitudinalControl = False
+    ret.steerControlType = car.CarParams.SteerControlType.torque
 
-    # Define default values across the MQB range, 
-    # redefined per model bellow.
-    # Commented our for now as we don't allow unknown models for now.
-
-    # ret.mass = 1500 + STD_CARGO_KG
-    # ret.wheelbase = 2.64
-    # tire_stiffness_factor = 1.0
-
-    # Refine parameters for each vehicle.
-    if candidate == CAR.GOLF:
-
-      ret.mass = 1500 + STD_CARGO_KG
-      ret.wheelbase = 2.64
-      tire_stiffness_factor = 1.0
-
-    elif candidate == CAR.VW_TOURAN:
-
+    if candidate == CAR.VW_TOURAN:
       ret.mass = 1650 + STD_CARGO_KG
       ret.wheelbase = 2.79
       tire_stiffness_factor = 0.8
-
+      
     elif candidate == CAR.SKODA_SUPERB_B8:
-
       ret.mass = 1700 + STD_CARGO_KG
       ret.wheelbase = 2.85
       tire_stiffness_factor = 0.8
       
-    # Not sure if I should simply exit or raise an error
     else:
-      raise ValueError("Unsupported car %s" % candidate)
+      # Default MQB - CAR.GOLF
+      ret.mass = 1500 + STD_CARGO_KG
+      ret.wheelbase = 2.64
+      tire_stiffness_factor = 1.0
+
     ret.centerToFront = ret.wheelbase * 0.45
     # TODO: get actual value, for now starting with reasonable value for
     # civic and scaling by mass and wheelbase
