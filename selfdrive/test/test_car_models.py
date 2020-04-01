@@ -347,18 +347,6 @@ routes = {
    'carFingerprint': VOLKSWAGEN.VW_TOURAN,
    'enableCamera': True,
   },
-  #"tbd": {
-  #  'carFingerprint': VOLKSWAGEN.SKODA_SUPERB_B8,
-  #  'enableCamera': True,
-  #},
-  #"a589dcc642fdb10a|2020-03-28--06-56-26": {
-  #  'carFingerprint': VOLKSWAGEN.VW_TOURAN,
-  #  'enableCamera': True,
-  #},
-  #"fbbfa6af821552b9|2020-03-03--08-09-43": {
-  #  'carFingerprint': NISSAN.XTRAIL,
-  #  'enableCamera': True,
-  #},
 }
 
 passive_routes = [
