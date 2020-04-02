@@ -339,7 +339,7 @@ routes = {
     'carFingerprint': VOLKSWAGEN.GOLF,
     'enableCamera': True,
   },
-  "972bfa9500dd3189|2020-02-25--19-27-14": {
+  "972bfa9500dd3189|2020-04-02--23-37-24": {
     'carFingerprint': VOLKSWAGEN.SKODA_SUPERB_B8,
     'enableCamera': True,
   },
