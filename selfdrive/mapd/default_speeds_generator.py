@@ -125,6 +125,33 @@ def main(filename = DEFAULT_OUTPUT_FILENAME):
   CA.add_rule({"highway": "tertiary_link"}, "50")
   CA.add_rule({"highway": "living_street"}, "20")
 
+  """
+  --------------------------------------------------
+      CH - Switzerland (Confederation Helvetica)
+  --------------------------------------------------
+  """
+  CH = Country("CH")
+  countries.append(CH)
+
+  """ Default rules """
+  CH.add_rule({"highway": "motorway"}, "120")
+  CH.add_rule({"highway": "motorway_link"}, "100")
+  CH.add_rule({"highway": "trunk"}, "100")
+  CH.add_rule({"highway": "primary"}, "80")
+  CH.add_rule({"highway": "secondary"}, "80")
+  CH.add_rule({"highway": "residential"}, "50")
+  CH.add_rule({"highway": "tertiary"}, "80")
+  CH.add_rule({"highway": "rural"}, "80")
+  CH.add_rule({"highway": "unclassified"}, "80")
+  CH.add_rule({"highway": "urban"}, "50")
+  CH.add_rule({"highway": "service"}, "30")
+  CH.add_rule({"highway": "motorway_link"}, "90")
+  CH.add_rule({"highway": "trunk_link"}, "80")
+  CH.add_rule({"highway": "primary_link"}, "80")
+  CH.add_rule({"highway": "secondary_link"}, "50")
+  CH.add_rule({"highway": "tertiary_link"}, "50")
+  CH.add_rule({"highway": "track"}, "40")
+
 
   """
   --------------------------------------------------
