@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <signal.h>
 #include <cassert>
+#include <sys/resource.h>
 
-#include "common/visionbuf.h"
-#include "common/visionipc.h"
+#include "visionbuf.h"
+#include "visionipc_client.h"
 #include "common/swaglog.h"
+#include "common/util.h"
 
 #include "models/dmonitoring.h"
 
@@ -15,79 +16,49 @@
 #endif
 
 
-volatile sig_atomic_t do_exit = 0;
-
-static void set_do_exit(int sig) {
-  do_exit = 1;
-}
+ExitHandler do_exit;
 
 int main(int argc, char **argv) {
-  int err;
-  set_realtime_priority(51);
+  setpriority(PRIO_PROCESS, 0, -15);
 
-  signal(SIGINT, (sighandler_t)set_do_exit);
-  signal(SIGTERM, (sighandler_t)set_do_exit);
-
-  // messaging
-  SubMaster sm({"dMonitoringState"});
   PubMaster pm({"driverState"});
 
   // init the models
   DMonitoringModelState dmonitoringmodel;
   dmonitoring_init(&dmonitoringmodel);
 
-  // loop
-  VisionStream stream;
-  while (!do_exit) {
-    VisionStreamBufs buf_info;
-    err = visionstream_init(&stream, VISION_STREAM_YUV_FRONT, true, &buf_info);
-    if (err) {
-      printf("visionstream connect fail\n");
-      usleep(100000);
+  VisionIpcClient vipc_client = VisionIpcClient("camerad", VISION_STREAM_YUV_FRONT, true);
+  while (!do_exit){
+    if (!vipc_client.connect(false)){
+      util::sleep_for(100);
       continue;
     }
-    LOGW("connected with buffer size: %d", buf_info.buf_len);
+    break;
+  }
+
+  while (!do_exit) {
+    LOGW("connected with buffer size: %d", vipc_client.buffers[0].len);
 
     double last = 0;
-    int chk_counter = 0;
     while (!do_exit) {
-      VIPCBuf *buf;
-      VIPCBufExtra extra;
-      buf = visionstream_get(&stream, &extra);
-      if (buf == NULL) {
-        printf("visionstream get failed\n");
-        visionstream_destroy(&stream);
-        break;
-      }
-      //printf("frame_id: %d %dx%d\n", extra.frame_id, buf_info.width, buf_info.height);
-      if (!dmonitoringmodel.is_rhd_checked) {
-        if (chk_counter >= RHD_CHECK_INTERVAL) {
-          if (sm.update(0) > 0) {
-            auto state = sm["dMonitoringState"].getDMonitoringState();
-            dmonitoringmodel.is_rhd = state.getIsRHD();
-            dmonitoringmodel.is_rhd_checked = state.getRhdChecked();
-          }
-          chk_counter = 0;
-        }
-        chk_counter += 1;
+      VisionIpcBufExtra extra = {0};
+      VisionBuf *buf = vipc_client.recv(&extra);
+      if (buf == nullptr){
+        continue;
       }
 
       double t1 = millis_since_boot();
-
-      DMonitoringResult res = dmonitoring_eval_frame(&dmonitoringmodel, buf->addr, buf_info.width, buf_info.height);
-
+      DMonitoringResult res = dmonitoring_eval_frame(&dmonitoringmodel, buf->addr, buf->width, buf->height);
       double t2 = millis_since_boot();
 
       // send dm packet
-      dmonitoring_publish(pm, extra.frame_id, res);
+      const float* raw_pred_ptr = send_raw_pred ? (const float *)dmonitoringmodel.output : nullptr;
+      dmonitoring_publish(pm, extra.frame_id, res, raw_pred_ptr, (t2-t1)/1000.0);
 
       LOGD("dmonitoring process: %.2fms, from last %.2fms", t2-t1, t1-last);
       last = t1;
     }
-
   }
-
-  visionstream_destroy(&stream);
 
   dmonitoring_free(&dmonitoringmodel);
 

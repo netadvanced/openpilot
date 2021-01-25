@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-#include <signal.h>
 #include <unistd.h>
 #include <assert.h>
 #include <sys/time.h>
@@ -18,9 +17,10 @@
 
 #include "messaging.hpp"
 #include "common/timing.h"
+#include "common/util.h"
 #include "common/swaglog.h"
 
-volatile sig_atomic_t do_exit = 0;
+ExitHandler do_exit;
 
 namespace {
 
@@ -29,20 +29,12 @@ PubMaster *pm;
 const GpsInterface* gGpsInterface = NULL;
 const AGpsInterface* gAGpsInterface = NULL;
 
-void set_do_exit(int sig) {
-  do_exit = 1;
-}
-
 void nmea_callback(GpsUtcTime timestamp, const char* nmea, int length) {
 
-  uint64_t log_time = nanos_since_boot();
   uint64_t log_time_wall = nanos_since_epoch();
 
-  capnp::MallocMessageBuilder msg;
-  cereal::Event::Builder event = msg.initRoot<cereal::Event>();
-  event.setLogMonoTime(log_time);
-
-  auto nmeaData = event.initGpsNMEA();
+  MessageBuilder msg;
+  auto nmeaData = msg.initEvent().initGpsNMEA();
   nmeaData.setTimestamp(timestamp);
   nmeaData.setLocalWallTime(log_time_wall);
   nmeaData.setNmea(nmea);
@@ -52,13 +44,9 @@ void nmea_callback(GpsUtcTime timestamp, const char* nmea, int length) {
 
 void location_callback(GpsLocation* location) {
   //printf("got location callback\n");
-  uint64_t log_time = nanos_since_boot();
 
-  capnp::MallocMessageBuilder msg;
-  cereal::Event::Builder event = msg.initRoot<cereal::Event>();
-  event.setLogMonoTime(log_time);
-
-  auto locationData = event.initGpsLocation();
+  MessageBuilder msg;
+  auto locationData = msg.initEvent().initGpsLocation();
   locationData.setFlags(location->flags);
   locationData.setLatitude(location->latitude);
   locationData.setLongitude(location->longitude);
@@ -156,9 +144,6 @@ void gps_destroy() {
 
 int main() {
   setpriority(PRIO_PROCESS, 0, -13);
-
-  signal(SIGINT, (sighandler_t)set_do_exit);
-  signal(SIGTERM, (sighandler_t)set_do_exit);
 
   gps_init();
 
