@@ -33,7 +33,7 @@ class CarInterface(CarInterfaceBase):
 
       # Additional common MQB parameters that may be overridden per-vehicle
       ret.steerRateCost = 1.0
-      ret.steerActuatorDelay = 0.05  # Hopefully all MQB racks are similar here
+      ret.steerActuatorDelay = 0.10  # Hopefully all MQB racks are similar here
       ret.steerLimitTimer = 0.4
       ret.steerRatio = 15.6  # Default, let the params learner figure this out
 
