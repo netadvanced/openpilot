@@ -27,12 +27,6 @@ QWidget * toggles_panel() {
                                             "../assets/offroad/icon_openpilot.png"
                                               ));
   toggles_list->addWidget(horizontal_line());
-  toggles_list->addWidget(new ParamControl("LaneChangeEnabled",
-                                            "Enable Lane Change Assist",
-                                            "Perform assisted lane changes with openpilot by checking your surroundings for safety, activating the turn signal and gently nudging the steering wheel towards your desired lane. openpilot is not capable of checking if a lane change is safe. You must continuously observe your surroundings to use this feature.",
-                                            "../assets/offroad/icon_road.png"
-                                              ));
-  toggles_list->addWidget(horizontal_line());
   toggles_list->addWidget(new ParamControl("IsLdwEnabled",
                                             "Enable Lane Departure Warnings",
                                             "Receive alerts to steer back into the lane when your vehicle drifts over a detected lane line without a turn signal activated while driving over 31mph (50kph).",
@@ -56,7 +50,11 @@ QWidget * toggles_panel() {
                                             "Use features from the open source community that are not maintained or supported by comma.ai and have not been confirmed to meet the standard safety model. These features include community supported cars and community supported hardware. Be extra cautious when using these features",
                                             "../assets/offroad/icon_shell.png"
                                             ));
-
+  toggles_list->addWidget(new ParamControl("EndToEndToggle",
+                                            "Enable laneless policy",
+                                            "Set openpilot free, in laneless mode openpilot will drive how it thinks a human would. Experimental.",
+                                            "../assets/offroad/icon_road.png"));
+  toggles_list->addWidget(horizontal_line());
   ParamControl *record_toggle = new ParamControl("RecordFront",
                                             "Record and Upload Driver Camera",
                                             "Upload data from the driver facing camera and help improve the driver monitoring algorithm.",
